@@ -1,16 +1,19 @@
 # crow
 
-A new Flutter project.
+## Research
 
-## Getting Started
+### iOS
 
-This project is a starting point for a Flutter application.
+#### Storage
 
-A few resources to get you started if this is your first Flutter project:
+- https://stackoverflow.com/questions/44604313/save-files-inside-app-folder
+- https://iosdevcenters.blogspot.com/2016/04/save-and-get-image-from-document.html
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+#### Zip Libary
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+| Libary | In-Momory Support | Password Support |
+|---|---|---|
+| [weichsel/ZIPFoundation](https://github.com/weichsel/ZIPFoundation) | [X] | [ ] | 
+| [ZipArchive/ZipArchive](https://github.com/ZipArchive/ZipArchive) | [ ] | [X] |
+| [marmelroy/Zip](https://github.com/marmelroy/Zip) | [ ] | [X] |
+
