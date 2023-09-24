@@ -12,6 +12,80 @@ import ZipArchive
         let controller : FlutterViewController = window?.rootViewController as! FlutterViewController
         let batteryChannel = FlutterMethodChannel(name: "samples.flutter.dev/battery",
                                                   binaryMessenger: controller.binaryMessenger)
+        let containerChannel = FlutterMethodChannel(name: "container",
+                                                     binaryMessenger: controller.binaryMessenger)
+        
+        containerChannel.setMethodCallHandler({
+          [weak self] (call: FlutterMethodCall, result: FlutterResult) -> Void in
+            // This method is invoked on the UI thread.
+            switch call.method {
+                case "create":
+                    print("container/create")
+                    // Arguments:
+                    //   containerLabel
+                    //   locationPath
+                    //   password
+                    // 1. Export an empty zip file to the public document folder
+                    let arguments = (call.arguments as! Dictionary<String, Any>)
+                    let containerLabel = arguments["containerLabel"] as! String
+                    // TODO: Use .tmpDirectory? See https://byby.dev/ios-persistence.
+                    let documentUrl: URL = try! FileManager.default.url(
+                        for: .documentDirectory,
+                        in: .userDomainMask,
+                        appropriateFor: nil,
+                        create: true)
+                    let fileUrl = documentUrl.appendingPathComponent("HelloWorld.txt")
+                    SSZipArchive.createZipFile(
+                        atPath: documentUrl.appendingPathComponent("\(containerLabel).zip").path,
+                        withFilesAtPaths: [/*fileUrl.path*/],
+                        withPassword: "test")
+                    // Add the full path of this ZIP archive to UserDefaults. See https://byby.dev/ios-persistence.
+                    result(true)
+                    return;
+                case "list":
+                    print("container/list")
+                    let containerPathArray = UserDefaults.standard.object(forKey: "ContainerPathArray") as? [String] ?? [String]()
+                    // TODO: Map containerPathArray to containerLabelArray ()
+                    let containerLabelArray = containerPathArray
+                    result(containerLabelArray)
+                    return;
+                break;
+                case "delete":
+                    print("container/delete")
+                    // Arguments
+                    //   containerLabel
+                    //   password? Technical the file can always be deleted without password via filemanager.
+                    return;
+                default:
+                    result(FlutterMethodNotImplemented)
+                    return
+
+            }
+            
+            /*
+            let arguments = (call.arguments as! Dictionary<String, Any>)
+            let containerLabel = arguments["containerLabel"] as! String
+            
+            let documentUrl: URL = try! FileManager.default.url(
+                for: .documentDirectory,
+                in: .userDomainMask,
+                appropriateFor: nil,
+                create: true)
+            
+            let fileUrl = documentUrl.appendingPathComponent("HelloWorld.txt")
+            let zipUrl = documentUrl.appendingPathComponent("\(containerLabel).zip")
+            var content: String = ""
+            _ = self?.write(fileUrl: fileUrl, content: "Hello World!!!")
+            _ = self?.read(fileUrl: fileUrl, content: &content)
+            _ = self?.list(pathUrl: documentUrl)
+            SSZipArchive.createZipFile(atPath: zipUrl.path, withFilesAtPaths: [fileUrl.path], withPassword: "test")
+            _ = self?.delete(fileUrl: fileUrl)
+            _ = self?.list(pathUrl: documentUrl)
+            _ = self?.unzip(zipUrl: zipUrl, destinationUrl: documentUrl, password: "test1")
+            _ = self?.delete(fileUrl: zipUrl)
+            _ = self?.list(pathUrl: documentUrl)*/
+        })
+        
         batteryChannel.setMethodCallHandler({
           [weak self] (call: FlutterMethodCall, result: FlutterResult) -> Void in
           // This method is invoked on the UI thread.
@@ -19,7 +93,6 @@ import ZipArchive
             result(FlutterMethodNotImplemented)
             return
           }
-        
             let documentUrl: URL = try! FileManager.default.url(
                 for: .documentDirectory,
                 in: .userDomainMask,
@@ -64,7 +137,14 @@ import ZipArchive
         return true;
     }
     
-    
+    private func documentDirectory() -> URL {
+        let documentDirectory = NSSearchPathForDirectoriesInDomains(.documentDirectory,
+                                                                    .userDomainMask,
+                                                                    true)
+        return URL(string: documentDirectory[0])!
+    }
+
+
     private func write(fileUrl: URL, content: String) -> Bool {
         print("write(..)")
         

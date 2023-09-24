@@ -1,3 +1,7 @@
-.dart_tool/
-build/
-pubspec.lock
+/.dart_tool/
+/.flutter-plugins
+/.flutter-plugins-dependencies
+/**/.DS_Store
+/build/
+/ios/Podfile.lock
+/pubspec.lock
