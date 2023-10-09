@@ -2,13 +2,14 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:archive/archive_io.dart';
-import 'package:crow/crypto_util.dart';
-import 'package:crow/navigator_util.dart';
-import 'package:crow/storage_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
+
+import 'package:crow/crypto_util.dart';
+import 'package:crow/navigator_util.dart';
+import 'package:crow/storage_util.dart';
 
 
 class MainView extends StatefulWidget {
@@ -79,7 +80,7 @@ class _MainView extends State<MainView> {
           future: getContent(),
           builder: (context, AsyncSnapshot<String> snapshot) {
             if (!snapshot.hasData) {
-              return const CircularProgressIndicator();
+              return const CupertinoActivityIndicator();
             }
 
             return Text(snapshot.data!);
