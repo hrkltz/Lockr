@@ -1,13 +1,12 @@
 import 'dart:io';
 
-import 'package:archive/archive_io.dart';
-import 'package:crow/crypto_util.dart';
+import 'package:crow/util/crypto_util.dart';
+import 'package:crow/view/create_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'package:crow/storage_util.dart';
+import 'package:crow/util/storage_util.dart';
 import 'package:crow/view/main_view.dart';
-import 'package:path_provider/path_provider.dart';
 
 
 class HomeView extends StatefulWidget {
@@ -31,7 +30,7 @@ class _HomeView extends State<HomeView> {
         child: CustomScrollView(
           slivers: [
             const CupertinoSliverNavigationBar(
-              largeTitle: Text('Lox'),
+              largeTitle: Text('Lockr'),
             ),
         SliverFillRemaining(
           hasScrollBody: false,
@@ -41,37 +40,38 @@ class _HomeView extends State<HomeView> {
                 hasLeading: true,
                 children: <CupertinoListTile>[
                   CupertinoListTile(
+                    title: const Text('Test2'),
+                    leading: const Icon(CupertinoIcons.add),
+                    trailing: const CupertinoListTileChevron(),
+                    onTap: () {
+                      CryptoUtil.test();
+                        /*var passwordBytes = Uint8List(password.length);
+
+                        for (var i = 0; i < password.length; i++) {
+                          passwordBytes[i] = password.codeUnitAt(i);
+                        }
+
+                        const salt = "test";
+                        var saltBytes = Uint8List(salt.length);
+
+                        for (var i = 0; i < salt.length; i++) {
+                          saltBytes[i] = salt.codeUnitAt(i);
+                        }
+
+                        x.Pbkdf2Parameters params = x.Pbkdf2Parameters(saltBytes, 1, 32);
+                        x.KeyDerivator keyDerivator = x.PBKDF2KeyDerivator(x.HMac(x.SHA256Digest(), 64));
+                        keyDerivator.init(params);
+                        final key = String.fromCharCodes(keyDerivator.process(passwordBytes));
+                        print(key);
+                        print(key.length);*/
+                    },
+                  ),
+                  
+                  CupertinoListTile(
                     title: const Text('Create New'),
                     leading: const Icon(CupertinoIcons.add),
                     trailing: const CupertinoListTileChevron(),
-                    onTap: () async {
-                      StorageUtil.deleteAll();
-                      // 2. Create an app internal directoy
-                      final appSupDir = await getApplicationSupportDirectory();
-                      File('${appSupDir.path}/Hello.txt').writeAsStringSync('Hello Unnamed!');
-                      // 3. Create temporary ZIP project.
-                      final temporaryZipFile = File('${appSupDir.path}/Unnamed.zip');
-                      ZipFileEncoder().zipDirectory(appSupDir, filename: temporaryZipFile.path);
-                      // 4. Encrypt ZIP file.
-                      final encryptedZip = CryptoUtil.encryptBytes(temporaryZipFile.readAsBytesSync());
-                      final encryptedTemporaryFile = File('${appSupDir.path}/Unnamed.lox');
-                      encryptedTemporaryFile.writeAsStringSync(encryptedZip);
-                      // 5. Export encrypted file.
-                      //await Share.shareXFiles([XFile(encryptedTemporaryFile.path)]);
-                      final result = await StorageUtil.saveFile(encryptedTemporaryFile.path);
-                      StorageUtil.deleteAll();
-
-                      if (!result.item1) {
-                        return;
-                      }
-
-                      if (!mounted) {
-                        return;
-                      }
-
-                      Navigator.pushNamed(context, MainView.routeName, arguments: result.item2);
-                    },
-                    //onTap: () => Navigator.pushNamed(context, CreateView.routeName),
+                    onTap: () => Navigator.pushNamed(context, CreateView.routeName),
                   ),
                   CupertinoListTile(
                     title: const Text('Open Existing'),
@@ -98,8 +98,8 @@ class _HomeView extends State<HomeView> {
                 hasLeading: false,
                 children: <CupertinoListTile>[
                   CupertinoListTile(
-                    title: const Text('Dieter'),
-                    additionalInfo: const Text('iCloud/Lox/Dieter.lox'),
+                    title: const Text('Work'),
+                    additionalInfo: const Text('iCloud/Lockr/Work.lkr'),
                     trailing: const CupertinoListTileChevron(),
                     onTap: () async {
                       Navigator.pushNamed(context, '/main', arguments: '/path/test');
@@ -116,7 +116,7 @@ class _HomeView extends State<HomeView> {
       return Scaffold(
         appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-          title: const Text('Lox'),
+          title: const Text('Lockr'),
         ),
         body: null,
       );

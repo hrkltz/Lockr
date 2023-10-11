@@ -20,9 +20,10 @@ class StorageUtil {
   static void deleteAll() async
   {
     print('StorageUtil.deleteAll()');
-    final appDocDir = await getApplicationDocumentsDirectory();
+    final appSupDir = await getApplicationSupportDirectory();
 
-    appDocDir.listSync(recursive: false).forEach((element) {
+    appSupDir.listSync(recursive: false).forEach((element) {
+      print('> Delete ${element.path}');
       element.deleteSync(recursive: true);
     });
   }
@@ -31,9 +32,9 @@ class StorageUtil {
   static void listAll() async
   {
     print('StorageUtil.listAll()');
-    final appDocDir = await getApplicationDocumentsDirectory();
+    final appSupDir = await getApplicationSupportDirectory();
 
-    appDocDir.listSync(recursive: true).forEach((element) {
+    appSupDir.listSync(recursive: true).forEach((element) {
       print('> ${element.path}');
     });
   }

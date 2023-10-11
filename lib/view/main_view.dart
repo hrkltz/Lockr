@@ -7,9 +7,9 @@ import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 
-import 'package:crow/crypto_util.dart';
-import 'package:crow/navigator_util.dart';
-import 'package:crow/storage_util.dart';
+import 'package:crow/util/crypto_util.dart';
+import 'package:crow/util/navigator_util.dart';
+import 'package:crow/util/storage_util.dart';
 
 
 class MainView extends StatefulWidget {
@@ -35,7 +35,7 @@ class _MainView extends State<MainView> {
 
   @override
   void didChangeDependencies() {
-    Uint8List bytes = CryptoUtil.decryptBytes(File(widget.path).readAsStringSync());
+    Uint8List bytes = CryptoUtil.decrypt('Passw0rd', File(widget.path).readAsStringSync());
     getApplicationSupportDirectory()
       .then((appSupDir) {
         final basename = basenameWithoutExtension(widget.path);

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:crow/view/create_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -22,9 +23,10 @@ class MyApp extends StatelessWidget {
       return CupertinoApp(
         theme: const CupertinoThemeData(
             barBackgroundColor: CupertinoColors.extraLightBackgroundGray,
-            primaryColor: CupertinoColors.destructiveRed),
+            primaryColor: CupertinoColors.systemBlue),
         routes: {
           HomeView.routeName: (context) => const HomeView(),
+          CreateView.routeName: (context) => const CreateView(),
           MainView.routeName: (context) => MainView(path: ModalRoute.of(context)!.settings.arguments as String),
         },
       );
@@ -37,6 +39,7 @@ class MyApp extends StatelessWidget {
         ),
         routes: {
           HomeView.routeName: (context) => const HomeView(),
+          CreateView.routeName: (context) => const CreateView(),
           MainView.routeName: (context) => MainView(path: ModalRoute.of(context)!.settings.arguments as String),
         },
       );

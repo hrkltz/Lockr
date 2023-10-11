@@ -1,0 +1,31 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "crow",
+            "request": "launch",
+            "type": "dart",
+            "toolArgs": [
+                "--dart-define", "SALT=$IO_HRKLTZ_LOCKR__SALT",
+                "--dart-define", "ITERATION_COUNT=$IO_HRKLTZ_LOCKR__ITERATION_COUNT",
+                "--dart-define", "DERIVED_KEY_LENGTH=$IO_HRKLTZ_LOCKR__DERIVED_KEY_LENGTH",
+                "--dart-define", "IV=$IO_HRKLTZ_LOCKR__IV"
+            ]
+        },
+        {
+            "name": "crow (profile mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "crow (release mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        }
+    ]
+}
