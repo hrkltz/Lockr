@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:crow/util/navigator_util.dart';
 import 'package:crow/view/create_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +25,7 @@ class MyApp extends StatelessWidget {
         theme: const CupertinoThemeData(
             barBackgroundColor: CupertinoColors.extraLightBackgroundGray,
             primaryColor: CupertinoColors.systemBlue),
+        navigatorKey: NavigatorUtil.navigatorKey,
         routes: {
           HomeView.routeName: (context) => const HomeView(),
           CreateView.routeName: (context) => const CreateView(),
@@ -37,6 +39,7 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
         ),
+        navigatorKey: NavigatorUtil.navigatorKey,
         routes: {
           HomeView.routeName: (context) => const HomeView(),
           CreateView.routeName: (context) => const CreateView(),
