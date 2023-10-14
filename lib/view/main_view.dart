@@ -42,18 +42,16 @@ class _MainView extends State<MainView> {
     }
   }
 
-
-  Future<bool> _loadContent() async {
+  Future<void> _loadContent() async {
     var isLoaded = await LockrService.loadFromStorage(widget.path, _passwordController.text);
     
     if (!isLoaded) {
-      return false;
+      throw Exception();
     }
 
     final appSupDir = await getApplicationSupportDirectory();
     _contentController.text = File('${appSupDir.path}/Hello.txt').readAsStringSync();
     setState(() {});
-    return true;
   }
 
 

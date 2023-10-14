@@ -27,37 +27,15 @@ class StorageUtil {
   }
 
 
-  static void listAll() async
-  {
-    final appSupDir = await getApplicationSupportDirectory();
-
-    appSupDir.listSync(recursive: true).forEach((element) {
-      print('> ${element.path}');
-    });
-  }
-
-
-  static Future<Tuple2<bool, String>> selectFile() async
+  static Future<String> selectFile() async
   {
     FilePickerResult? filePickerResult = await FilePicker.platform.pickFiles();
 
     if (filePickerResult == null) {
-      return const Tuple2(false, '');
+      throw Exception();
     }
 
-    return Tuple2(true, filePickerResult.files[0].path!);
-  }
-
-
-  static Future<Tuple2<bool, String>> selectDirectory() async
-  {
-    String? directoryPath = await FilePicker.platform.getDirectoryPath();
-
-    if (directoryPath == null) {
-      return const Tuple2(false, '');
-    }
-
-    return Tuple2(true, directoryPath);
+    return filePickerResult.files[0].path!;
   }
 
 

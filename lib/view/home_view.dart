@@ -49,12 +49,7 @@ class _HomeView extends State<HomeView> {
                     trailing: const CupertinoListTileChevron(),
                     onTap: () async {
                       StorageUtil.selectFile().then((value) {
-                        if (!value.item1)
-                        {
-                          return;
-                        }
-
-                        Navigator.pushNamed(context, MainView.routeName, arguments: value.item2);
+                        Navigator.pushNamed(context, MainView.routeName, arguments: value);
                       });
                     },
                   ),
