@@ -5,6 +5,7 @@ import 'package:pointycastle/export.dart';
 
 
 class CryptoUtil {
+  // Note: const is important otherwise String.fromEnvironment won't work.
   static const _iv = String.fromEnvironment('IV');
 
 
