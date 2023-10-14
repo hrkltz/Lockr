@@ -1,12 +1,10 @@
 import 'dart:io';
-
 import 'package:archive/archive_io.dart';
 import 'package:crow/util/crypto_util.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-
 import 'package:crow/util/storage_util.dart';
 import 'package:crow/view/main_view.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 
 
@@ -67,7 +65,7 @@ class _CreateView extends State<CreateView> {
               ZipFileEncoder().zipDirectory(appSupDir, filename: temporaryZipFile.path);
               // 4. Encrypt ZIP file.
               final encryptedZip = CryptoUtil.encrypt(_passwordController.text, temporaryZipFile.readAsBytesSync());
-              final encryptedTemporaryFile = File('${appSupDir.path}/${_nameController.text}.lox');
+              final encryptedTemporaryFile = File('${appSupDir.path}/${_nameController.text}.lkr');
               encryptedTemporaryFile.writeAsStringSync(encryptedZip);
               // 5. Export encrypted file.
               //await Share.shareXFiles([XFile(encryptedTemporaryFile.path)]);
@@ -115,7 +113,7 @@ class _CreateView extends State<CreateView> {
       return Scaffold(
         appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-          title: const Text('Lox'),
+          title: const Text('Lockr'),
         ),
         body: null,
       );

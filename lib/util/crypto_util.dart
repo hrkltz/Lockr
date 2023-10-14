@@ -1,6 +1,5 @@
 
 import 'dart:typed_data';
-
 import 'package:encrypt/encrypt.dart';
 import 'package:pointycastle/export.dart';
 
@@ -45,7 +44,6 @@ class CryptoUtil {
 
     Uint8List keyBytes = _deriveKey(password);
     final key = Key(keyBytes);
-    //final iv = IV.fromLength(16);
     final iv = IV.fromUtf8(_iv);
     final encrypter = Encrypter(AES(key));
     final encrypted = encrypter.encryptBytes(bytes, iv: iv);

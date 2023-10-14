@@ -1,23 +1,21 @@
 import 'dart:io';
-
-import 'package:crow/util/navigator_util.dart';
+import 'package:crow/util/mixed_util.dart';
 import 'package:crow/view/create_view.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-
 import 'package:crow/view/home_view.dart';
 import 'package:crow/view/main_view.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 
 void main() {
   runApp(const MyApp());
 }
 
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     if (Platform.isIOS) {
@@ -25,7 +23,7 @@ class MyApp extends StatelessWidget {
         theme: const CupertinoThemeData(
             barBackgroundColor: CupertinoColors.extraLightBackgroundGray,
             primaryColor: CupertinoColors.systemBlue),
-        navigatorKey: NavigatorUtil.navigatorKey,
+        navigatorKey: MixedUtil.navigatorKey,
         routes: {
           HomeView.routeName: (context) => const HomeView(),
           CreateView.routeName: (context) => const CreateView(),
@@ -39,7 +37,7 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
         ),
-        navigatorKey: NavigatorUtil.navigatorKey,
+        navigatorKey: MixedUtil.navigatorKey,
         routes: {
           HomeView.routeName: (context) => const HomeView(),
           CreateView.routeName: (context) => const CreateView(),

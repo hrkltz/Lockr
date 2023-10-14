@@ -1,16 +1,14 @@
 import 'dart:io';
 import 'dart:typed_data';
-
 import 'package:archive/archive_io.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
-import 'package:path/path.dart';
-import 'package:path_provider/path_provider.dart';
-
 import 'package:crow/util/crypto_util.dart';
+import 'package:crow/util/mixed_util.dart';
 import 'package:crow/util/navigator_util.dart';
 import 'package:crow/util/storage_util.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart';
 
 
 class MainView extends StatefulWidget {
@@ -44,7 +42,7 @@ class _MainView extends State<MainView> {
         setState(() {});
       })
       .onError((error, stackTrace) {
-        NavigatorUtil.pop();
+        NavigatorUtil.pop(MixedUtil.navigatorState);
       });
   }
 
@@ -62,7 +60,7 @@ class _MainView extends State<MainView> {
     super.didChangeDependencies();
     WidgetsBinding.instance.addPostFrameCallback((timestamp) =>
       showAdaptiveDialog<String>(
-        context: NavigatorUtil.navigatorKey.currentContext!,
+        context: MixedUtil.context,
         builder: (BuildContext context2) {
           return AlertDialog.adaptive(
             content: CupertinoTextField(
@@ -74,7 +72,7 @@ class _MainView extends State<MainView> {
             actions: <Widget>[
               adaptiveAction(
                 context: context2,
-                onPressed: () => NavigatorUtil.popHome(),
+                onPressed: () => NavigatorUtil.popHome(MixedUtil.navigatorState),
                 child: const Text('Cancel'),
               ),
               adaptiveAction(
