@@ -38,34 +38,6 @@ class _HomeView extends State<HomeView> {
                 hasLeading: true,
                 children: <CupertinoListTile>[
                   CupertinoListTile(
-                    title: const Text('Test2'),
-                    leading: const Icon(CupertinoIcons.add),
-                    trailing: const CupertinoListTileChevron(),
-                    onTap: () {
-                      CryptoUtil.test();
-                        /*var passwordBytes = Uint8List(password.length);
-
-                        for (var i = 0; i < password.length; i++) {
-                          passwordBytes[i] = password.codeUnitAt(i);
-                        }
-
-                        const salt = "test";
-                        var saltBytes = Uint8List(salt.length);
-
-                        for (var i = 0; i < salt.length; i++) {
-                          saltBytes[i] = salt.codeUnitAt(i);
-                        }
-
-                        x.Pbkdf2Parameters params = x.Pbkdf2Parameters(saltBytes, 1, 32);
-                        x.KeyDerivator keyDerivator = x.PBKDF2KeyDerivator(x.HMac(x.SHA256Digest(), 64));
-                        keyDerivator.init(params);
-                        final key = String.fromCharCodes(keyDerivator.process(passwordBytes));
-                        print(key);
-                        print(key.length);*/
-                    },
-                  ),
-                  
-                  CupertinoListTile(
                     title: const Text('Create New'),
                     leading: const Icon(CupertinoIcons.add),
                     trailing: const CupertinoListTileChevron(),
@@ -76,18 +48,14 @@ class _HomeView extends State<HomeView> {
                     leading: const Icon(CupertinoIcons.archivebox),
                     trailing: const CupertinoListTileChevron(),
                     onTap: () async {
-                      final result = await StorageUtil.selectFile();
+                      StorageUtil.selectFile().then((value) {
+                        if (!value.item1)
+                        {
+                          return;
+                        }
 
-                      if (!result.item1)
-                      {
-                        return;
-                      }
-
-                      if (!mounted) {
-                        return;
-                      }
-
-                      Navigator.pushNamed(context, MainView.routeName, arguments: result.item2);
+                        Navigator.pushNamed(context, MainView.routeName, arguments: value.item2);
+                      });
                     },
                   ),
                 ],

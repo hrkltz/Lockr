@@ -1,11 +1,8 @@
 import 'dart:io';
-import 'package:archive/archive_io.dart';
-import 'package:crow/util/crypto_util.dart';
-import 'package:crow/util/storage_util.dart';
+import 'package:crow/service/lockr_service.dart';
 import 'package:crow/view/main_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
 
 
 class CreateView extends StatefulWidget {
@@ -55,32 +52,14 @@ class _CreateView extends State<CreateView> {
                 color: CupertinoColors.systemBlue
               )
             ),
-            onTap: () async {
-              StorageUtil.deleteAll();
-              // 2. Create an app internal directoy
-              final appSupDir = await getApplicationSupportDirectory();
-              File('${appSupDir.path}/Hello.txt').writeAsStringSync('Hello ${_nameController.text}!');
-              // 3. Create temporary ZIP project.
-              final temporaryZipFile = File('${appSupDir.path}/${_nameController.text}.zip');
-              ZipFileEncoder().zipDirectory(appSupDir, filename: temporaryZipFile.path);
-              // 4. Encrypt ZIP file.
-              final encryptedZip = CryptoUtil.encrypt(_passwordController.text, temporaryZipFile.readAsBytesSync());
-              final encryptedTemporaryFile = File('${appSupDir.path}/${_nameController.text}.lkr');
-              encryptedTemporaryFile.writeAsStringSync(encryptedZip);
-              // 5. Export encrypted file.
-              //await Share.shareXFiles([XFile(encryptedTemporaryFile.path)]);
-              final result = await StorageUtil.saveFile(encryptedTemporaryFile.path);
-              StorageUtil.deleteAll();
+            onTap: () {
+              LockrService.create(_nameController.text, _passwordController.text).then((value) {
+                if (!value.item1) {
+                  return;
+                }
 
-              if (!result.item1) {
-                return;
-              }
-
-              if (!mounted) {
-                return;
-              }
-
-              Navigator.pushNamed(context, MainView.routeName, arguments: result.item2);
+                Navigator.pushReplacementNamed(context, MainView.routeName, arguments: value.item2);
+              });
             },
           ),
         ),

@@ -61,16 +61,4 @@ class CryptoUtil {
     final encrypter = Encrypter(AES(key));
     return Uint8List.fromList(encrypter.decryptBytes(Encrypted.fromBase64(encryptedContent), iv: iv));
   }
-
-  
-  static void test() {
-    const password = "password";
-    const message = "Hello World!";
-    print('Input: "Hello World!"');
-    Uint8List messageBytes = _uint8ListFromString(message);
-    String encryptedString = CryptoUtil.encrypt(password, Uint8List.fromList(messageBytes));
-    print(encryptedString);
-    messageBytes = CryptoUtil.decrypt(password, encryptedString);
-    print('Output: ${String.fromCharCodes(messageBytes)}');
-  }
 }

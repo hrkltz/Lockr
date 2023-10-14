@@ -17,21 +17,18 @@ import 'package:tuple/tuple.dart';
   Remember that files in Documents/ and Application Support/ are backed up by default. You can exclude files from the backup by calling -[NSURL setResourceValue:forKey:error:] using the NSURLIsExcludedFromBackupKey key.
 */
 class StorageUtil {
-  static void deleteAll() async
+  static void deleteAll()
   {
-    print('StorageUtil.deleteAll()');
-    final appSupDir = await getApplicationSupportDirectory();
-
-    appSupDir.listSync(recursive: false).forEach((element) {
-      print('> Delete ${element.path}');
-      element.deleteSync(recursive: true);
+    getApplicationSupportDirectory().then((value) {
+      value.listSync(recursive: false).forEach((element) {
+        element.deleteSync(recursive: true);
+      });
     });
   }
 
 
   static void listAll() async
   {
-    print('StorageUtil.listAll()');
     final appSupDir = await getApplicationSupportDirectory();
 
     appSupDir.listSync(recursive: true).forEach((element) {
@@ -42,7 +39,6 @@ class StorageUtil {
 
   static Future<Tuple2<bool, String>> selectFile() async
   {
-    print('StorageUtil.selectFile()');
     FilePickerResult? filePickerResult = await FilePicker.platform.pickFiles();
 
     if (filePickerResult == null) {
@@ -55,7 +51,6 @@ class StorageUtil {
 
   static Future<Tuple2<bool, String>> selectDirectory() async
   {
-    print('StorageUtil.selectDirectory()');
     String? directoryPath = await FilePicker.platform.getDirectoryPath();
 
     if (directoryPath == null) {
@@ -66,9 +61,8 @@ class StorageUtil {
   }
 
 
-  static Future<Tuple2<bool, String>> saveFile(String sourceFilePath) async {
-    print('StorageUtil.saveFile()');
-    final params = SaveFileDialogParams(sourceFilePath: sourceFilePath);
+  static Future<Tuple2<bool, String>> saveFile(String lockrName, String sourceFilePath) async {
+    final params = SaveFileDialogParams(sourceFilePath: sourceFilePath, fileName: '$lockrName.lkr');
     final filePath = await FlutterFileDialog.saveFile(params: params);
 
     if (filePath == null) {

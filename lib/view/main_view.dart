@@ -1,7 +1,5 @@
 import 'dart:io';
-import 'dart:typed_data';
-import 'package:archive/archive_io.dart';
-import 'package:crow/util/crypto_util.dart';
+import 'package:crow/service/lockr_service.dart';
 import 'package:crow/util/mixed_util.dart';
 import 'package:crow/util/navigator_util.dart';
 import 'package:crow/util/storage_util.dart';
@@ -26,24 +24,36 @@ class MainView extends StatefulWidget {
 
 class _MainView extends State<MainView> {
   late TextEditingController _passwordController;
-  String _data = '';
+  late TextEditingController _contentController;
+  
+  
+  Widget _adaptiveAction({required BuildContext context, required VoidCallback onPressed, required Widget child}) {
+    final ThemeData theme = Theme.of(context);
+
+    switch (theme.platform) {
+      case TargetPlatform.android:
+      case TargetPlatform.fuchsia:
+      case TargetPlatform.linux:
+      case TargetPlatform.windows:
+        return TextButton(onPressed: onPressed, child: child);
+      case TargetPlatform.iOS:
+      case TargetPlatform.macOS:
+        return CupertinoDialogAction(onPressed: onPressed, child: child);
+    }
+  }
 
 
-  void _load() {
-    Uint8List bytes = CryptoUtil.decrypt(_passwordController.text, File(widget.path).readAsStringSync());
-    getApplicationSupportDirectory()
-      .then((appSupDir) {
-        final basename = basenameWithoutExtension(widget.path);
-        final temporaryZipFile = File('${appSupDir.path}/$basename.zip');
-        temporaryZipFile.writeAsBytesSync(bytes);
-        final archive = ZipDecoder().decodeBuffer(InputFileStream(temporaryZipFile.path));
-        extractArchiveToDisk(archive, '${appSupDir.path}/$basename/');
-        _data = File('${appSupDir.path}/$basename/Hello.txt').readAsStringSync();
-        setState(() {});
-      })
-      .onError((error, stackTrace) {
-        NavigatorUtil.pop(MixedUtil.navigatorState);
-      });
+  Future<bool> _loadContent() async {
+    var isLoaded = await LockrService.loadFromStorage(widget.path, _passwordController.text);
+    
+    if (!isLoaded) {
+      return false;
+    }
+
+    final appSupDir = await getApplicationSupportDirectory();
+    _contentController.text = File('${appSupDir.path}/Hello.txt').readAsStringSync();
+    setState(() {});
+    return true;
   }
 
 
@@ -52,6 +62,7 @@ class _MainView extends State<MainView> {
     super.initState();
     StorageUtil.deleteAll();
     _passwordController = TextEditingController();
+    _contentController = TextEditingController();
   }
 
 
@@ -70,16 +81,19 @@ class _MainView extends State<MainView> {
               controller: _passwordController,
             ),
             actions: <Widget>[
-              adaptiveAction(
+              _adaptiveAction(
                 context: context2,
                 onPressed: () => NavigatorUtil.popHome(MixedUtil.navigatorState),
                 child: const Text('Cancel'),
               ),
-              adaptiveAction(
+              _adaptiveAction(
                 context: context2,
                 onPressed: () {
-                  _load();
-                  Navigator.pop(context2, 'OK');
+                  _loadContent().then((value) {
+                    Navigator.pop(context2, 'OK');
+                  }).onError((error, stackTrace) {
+                      _passwordController.clear();
+                  });
                 },
                 child: const Text('OK'),
               ),
@@ -95,31 +109,8 @@ class _MainView extends State<MainView> {
   void dispose() {
     StorageUtil.deleteAll();
     _passwordController.dispose();
+    _contentController.dispose();
     super.dispose();
-  }
-
-
-  Future<String> getContent() async
-  {
-    final appSupDir = await getApplicationSupportDirectory();
-    final basename = basenameWithoutExtension(widget.path);
-    return File('${appSupDir.path}/$basename/Hello.txt').readAsStringSync();
-  }
-  
-  
-  Widget adaptiveAction({required BuildContext context, required VoidCallback onPressed, required Widget child}) {
-    final ThemeData theme = Theme.of(context);
-
-    switch (theme.platform) {
-      case TargetPlatform.android:
-      case TargetPlatform.fuchsia:
-      case TargetPlatform.linux:
-      case TargetPlatform.windows:
-        return TextButton(onPressed: onPressed, child: child);
-      case TargetPlatform.iOS:
-      case TargetPlatform.macOS:
-        return CupertinoDialogAction(onPressed: onPressed, child: child);
-    }
   }
 
 
@@ -130,10 +121,30 @@ class _MainView extends State<MainView> {
         backgroundColor: Colors.white,
         navigationBar: CupertinoNavigationBar(
           middle: Text(basenameWithoutExtension(widget.path)),
+          trailing: GestureDetector(
+            child: const Text(
+              'Save',
+              style: TextStyle(
+                color: CupertinoColors.systemBlue
+              ),
+            ),
+            onTap: () async {
+              final appSupDir = await getApplicationSupportDirectory();
+              File('${appSupDir.path}/Hello.txt').writeAsStringSync(_contentController.text);
+              LockrService.saveToStorage(basenameWithoutExtension(widget.path), _passwordController.text)
+                .then((value) {
+                  // TODO: Show succcess toast.
+                })
+                .onError((error, stackTrace) {
+                  // TODO: Show error toast.
+                }
+              );
+            },
           ),
+        ),
         child: Center(
-          child: _data.isNotEmpty ? 
-            Text(_data) : 
+          child: _contentController.text.isNotEmpty ? 
+            CupertinoTextField.borderless(controller: _contentController,) : 
             const CupertinoActivityIndicator()
         ),
       );
