@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:crow/service/lockr_service.dart';
-import 'package:crow/view/main_view.dart';
+import 'package:crow/view/lockr_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -44,7 +44,7 @@ class _CreateView extends State<CreateView> {
       return CupertinoPageScaffold(
         backgroundColor: CupertinoColors.systemGroupedBackground,
         navigationBar: CupertinoNavigationBar(
-          middle: const Text('New'),
+          middle: const Text('Lockr'),
           trailing: GestureDetector(
             child: const Text(
               'Create',
@@ -58,7 +58,7 @@ class _CreateView extends State<CreateView> {
                   return;
                 }
 
-                Navigator.pushReplacementNamed(context, MainView.routeName, arguments: value.item2);
+                Navigator.pushReplacementNamed(context, LockrView.routeName, arguments: value.item2);
               });
             },
           ),

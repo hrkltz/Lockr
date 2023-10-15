@@ -9,20 +9,20 @@ import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart';
 
 
-class MainView extends StatefulWidget {
+class LockrView extends StatefulWidget {
   static const routeName = '/main';
   final String path;
 
 
-  const MainView({super.key, required this.path});
+  const LockrView({super.key, required this.path});
 
 
   @override
-  State<MainView> createState() => _MainView();
+  State<LockrView> createState() => _LockrView();
 }
 
 
-class _MainView extends State<MainView> {
+class _LockrView extends State<LockrView> {
   late TextEditingController _passwordController;
   late TextEditingController _contentController;
   

@@ -1,8 +1,7 @@
 import 'dart:io';
-import 'package:crow/util/crypto_util.dart';
 import 'package:crow/util/storage_util.dart';
 import 'package:crow/view/create_view.dart';
-import 'package:crow/view/main_view.dart';
+import 'package:crow/view/lockr_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -49,7 +48,7 @@ class _HomeView extends State<HomeView> {
                     trailing: const CupertinoListTileChevron(),
                     onTap: () async {
                       StorageUtil.selectFile().then((value) {
-                        Navigator.pushNamed(context, MainView.routeName, arguments: value);
+                        Navigator.pushNamed(context, LockrView.routeName, arguments: value);
                       });
                     },
                   ),

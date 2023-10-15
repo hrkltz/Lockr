@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:crow/util/mixed_util.dart';
 import 'package:crow/view/create_view.dart';
 import 'package:crow/view/home_view.dart';
-import 'package:crow/view/main_view.dart';
+import 'package:crow/view/lockr_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
         routes: {
           HomeView.routeName: (context) => const HomeView(),
           CreateView.routeName: (context) => const CreateView(),
-          MainView.routeName: (context) => MainView(path: ModalRoute.of(context)!.settings.arguments as String),
+          LockrView.routeName: (context) => LockrView(path: ModalRoute.of(context)!.settings.arguments as String),
         },
       );
     } else {
@@ -41,7 +41,7 @@ class MyApp extends StatelessWidget {
         routes: {
           HomeView.routeName: (context) => const HomeView(),
           CreateView.routeName: (context) => const CreateView(),
-          MainView.routeName: (context) => MainView(path: ModalRoute.of(context)!.settings.arguments as String),
+          LockrView.routeName: (context) => LockrView(path: ModalRoute.of(context)!.settings.arguments as String),
         },
       );
     }
