@@ -20,7 +20,6 @@ class LockrService {
     encryptedTemporaryFile.writeAsStringSync(encryptedZip);
     final result = await StorageUtil.saveFile(lockrName, encryptedTemporaryFile.path);
     StorageUtil.deleteAll();
-    print(result.item2);
     return result;
   }
 
