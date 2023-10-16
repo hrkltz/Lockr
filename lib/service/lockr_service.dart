@@ -4,11 +4,10 @@ import 'package:archive/archive_io.dart';
 import 'package:crow/util/crypto_util.dart';
 import 'package:crow/util/storage_util.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:tuple/tuple.dart';
 
 
 class LockrService {
-  static Future<Tuple2<bool,String>> create(String lockrName, String password) async {
+  static Future<({bool isSuccess, String filePath})> create(String lockrName, String password) async {
     StorageUtil.deleteAll();
     final appSupDir = await getApplicationSupportDirectory();
     File('${appSupDir.path}/Hello.txt').writeAsStringSync('Hello World!');
@@ -54,7 +53,7 @@ class LockrService {
     // TODO: Find a way to store it without asking for the location again!
     final result = await StorageUtil.saveFile(lockrName, encryptedTemporaryFile.path);
 
-    if (!result.item1) {
+    if (!result.isSuccess) {
       return false;
     }
 

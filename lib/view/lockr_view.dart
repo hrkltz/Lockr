@@ -41,6 +41,7 @@ class _LockrView extends State<LockrView> {
         return CupertinoDialogAction(onPressed: onPressed, child: child);
     }
   }
+  
 
   Future<void> _loadContent() async {
     var isLoaded = await LockrService.loadFromStorage(widget.path, _passwordController.text);

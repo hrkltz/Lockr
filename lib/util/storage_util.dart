@@ -1,7 +1,6 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_file_dialog/flutter_file_dialog.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:tuple/tuple.dart';
 
 
 /* Some Notes:
@@ -39,15 +38,15 @@ class StorageUtil {
   }
 
 
-  static Future<Tuple2<bool, String>> saveFile(String lockrName, String sourceFilePath) async {
+  static Future<({bool isSuccess, String filePath})> saveFile(String lockrName, String sourceFilePath) async {
     final params = SaveFileDialogParams(sourceFilePath: sourceFilePath, fileName: '$lockrName.lkr');
     final filePath = await FlutterFileDialog.saveFile(params: params);
 
     if (filePath == null) {
-      return const Tuple2(false, '');
+      return (isSuccess: false, filePath: '');
     }
 
-    return Tuple2(true, filePath);
+    return (isSuccess: true, filePath: filePath);
   }
 
 
