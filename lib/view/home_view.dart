@@ -2,10 +2,12 @@ import 'dart:io';
 import 'package:crow/service/lockr_service.dart';
 import 'package:crow/util/mixed_util.dart';
 import 'package:crow/util/navigator_util.dart';
+import 'package:crow/util/preferences_util.dart';
 import 'package:crow/util/storage_util.dart';
 import 'package:crow/view/lockr_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:path/path.dart';
 
 
 class HomeView extends StatefulWidget {
@@ -37,12 +39,16 @@ class _HomeView extends State<HomeView> {
   }
 
 
-
+  List<String> previousOpenedLockrContainers = List.empty();
 
 
   @override
   void initState() {
     super.initState();
+    PreferencesUtil.init().then((_) {
+        previousOpenedLockrContainers = PreferencesUtil.getItems();
+        setState(() {});
+    });
   }
 
 
@@ -143,7 +149,7 @@ class _HomeView extends State<HomeView> {
                     title: const Text('Open Existing'),
                     leading: const Icon(CupertinoIcons.archivebox),
                     trailing: const CupertinoListTileChevron(),
-                    onTap: () async {
+                    onTap: () {
                       StorageUtil.selectFile().then((value) {
                         Navigator.pushNamed(context, LockrView.routeName, arguments: value);
                       });
@@ -154,14 +160,19 @@ class _HomeView extends State<HomeView> {
               CupertinoListSection.insetGrouped(
                 hasLeading: false,
                 children: <CupertinoListTile>[
-                  CupertinoListTile(
-                    title: const Text('Work'),
-                    additionalInfo: const Text('iCloud/Lockr/Work.lkr'),
-                    trailing: const CupertinoListTileChevron(),
-                    onTap: () async {
-                      Navigator.pushNamed(context, '/main', arguments: '/path/test');
-                    },
-                  ),
+                  if (previousOpenedLockrContainers.isEmpty)
+                    ...[const CupertinoListTile(
+                    title: Text('History is empty.'),
+                    )]
+                  else
+                    ...previousOpenedLockrContainers.map((value) => CupertinoListTile(
+                      title: Text(basenameWithoutExtension(value)),
+                      additionalInfo: Text(value),
+                      trailing: const CupertinoListTileChevron(),
+                      onTap: () async {
+                        Navigator.pushNamed(context, '/main', arguments: '/path/test');
+                      })
+                    ),
                 ],
               ),
             ],
