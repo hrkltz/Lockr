@@ -16,18 +16,29 @@ import 'package:path_provider/path_provider.dart';
   Remember that files in Documents/ and Application Support/ are backed up by default. You can exclude files from the backup by calling -[NSURL setResourceValue:forKey:error:] using the NSURLIsExcludedFromBackupKey key.
 */
 class StorageUtil {
-  static void deleteAll()
+  static Future<void> listAll() async
   {
-    getApplicationSupportDirectory().then((value) {
-      value.listSync(recursive: false).forEach((element) {
-        element.deleteSync(recursive: true);
-      });
+    print("listAll");
+    final appSupDir = await getApplicationSupportDirectory();
+    appSupDir.listSync(recursive: false).forEach((element) {
+      print('listAll: ${element.path}');
+    });
+  }
+
+
+  static Future<void> deleteAll() async
+  {
+    print("deleteAll");
+    final appSupDir = await getApplicationSupportDirectory();
+    appSupDir.listSync(recursive: false).forEach((element) {
+      element.deleteSync(recursive: true);
     });
   }
 
 
   static Future<String> selectFile() async
   {
+    print('selectFile');
     FilePickerResult? filePickerResult = await FilePicker.platform.pickFiles();
 
     if (filePickerResult == null) {
@@ -39,6 +50,7 @@ class StorageUtil {
 
 
   static Future<({bool isSuccess, String filePath})> saveFile(String lockrName, String sourceFilePath) async {
+    print("saveFile($lockrName, $sourceFilePath)");
     final params = SaveFileDialogParams(sourceFilePath: sourceFilePath, fileName: '$lockrName.lkr');
     final filePath = await FlutterFileDialog.saveFile(params: params);
 

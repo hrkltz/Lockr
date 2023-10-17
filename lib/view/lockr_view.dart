@@ -56,6 +56,66 @@ class _LockrView extends State<LockrView> {
   }
 
 
+  void _showPasswordDialog() {
+    showAdaptiveDialog<String>(
+      context: MixedUtil.context,
+      builder: (BuildContext context2) {
+        return AlertDialog.adaptive(
+          content: CupertinoTextField(
+            autocorrect: false,
+            obscureText: true,
+            placeholder: 'Password',
+            controller: _passwordController,
+          ),
+          actions: <Widget>[
+            _adaptiveAction(
+              context: context2,
+              onPressed: () => NavigatorUtil.popHome(MixedUtil.navigatorState),
+              child: const Text('Cancel'),
+            ),
+            _adaptiveAction(
+              context: context2,
+              onPressed: () {
+                _loadContent().then((value) {
+                  Navigator.pop(context2, 'OK');
+                }).onError((error, stackTrace) {
+                  _passwordController.clear();
+                  _showPasswordEmptyDialog();
+                });
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      }
+    );
+  }
+
+
+  void _showPasswordEmptyDialog() {
+    showAdaptiveDialog<String>(
+      context: MixedUtil.context,
+      builder: (BuildContext context2) {
+        return AlertDialog.adaptive(
+          content: const Text('Wrong password.'),
+          actions: <Widget>[
+            _adaptiveAction(
+              context: context2,
+              onPressed: () => NavigatorUtil.popHome(MixedUtil.navigatorState),
+              child: const Text('Cancel'),
+            ),
+            _adaptiveAction(
+              context: context2,
+              onPressed: () => NavigatorUtil.pop(MixedUtil.navigatorState),
+              child: const Text('Try Again'),
+            ),
+          ],
+        );
+      }
+    );
+  }
+
+
   @override
   void initState() {
     super.initState();
@@ -68,39 +128,7 @@ class _LockrView extends State<LockrView> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    WidgetsBinding.instance.addPostFrameCallback((timestamp) =>
-      showAdaptiveDialog<String>(
-        context: MixedUtil.context,
-        builder: (BuildContext context2) {
-          return AlertDialog.adaptive(
-            content: CupertinoTextField(
-              autocorrect: false,
-              obscureText: true,
-              placeholder: 'Password',
-              controller: _passwordController,
-            ),
-            actions: <Widget>[
-              _adaptiveAction(
-                context: context2,
-                onPressed: () => NavigatorUtil.popHome(MixedUtil.navigatorState),
-                child: const Text('Cancel'),
-              ),
-              _adaptiveAction(
-                context: context2,
-                onPressed: () {
-                  _loadContent().then((value) {
-                    Navigator.pop(context2, 'OK');
-                  }).onError((error, stackTrace) {
-                      _passwordController.clear();
-                  });
-                },
-                child: const Text('OK'),
-              ),
-            ],
-          );
-        }
-      )
-    );
+    WidgetsBinding.instance.addPostFrameCallback((timestamp) => _showPasswordDialog());
   }
 
 

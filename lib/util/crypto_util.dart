@@ -53,12 +53,17 @@ class CryptoUtil {
 
 
   // encrypredContent needs to be stored as Base64!
-  static Uint8List decrypt(String password, String encryptedContent)
+  static ({bool isSuccess, Uint8List value}) decrypt(String password, String encryptedContent)
   {
     Uint8List keyBytes = _deriveKey(password);
     final key = Key(keyBytes);
     final iv = IV.fromUtf8(_iv);
     final encrypter = Encrypter(AES(key));
-    return Uint8List.fromList(encrypter.decryptBytes(Encrypted.fromBase64(encryptedContent), iv: iv));
+
+    try {
+      return (isSuccess: true, value: Uint8List.fromList(encrypter.decryptBytes(Encrypted.fromBase64(encryptedContent), iv: iv)));
+    } catch(e) {
+      return (isSuccess: false, value: Uint8List.fromList(List.empty()));
+    }
   }
 }

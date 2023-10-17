@@ -8,7 +8,8 @@ import 'package:path_provider/path_provider.dart';
 
 class LockrService {
   static Future<({bool isSuccess, String filePath})> create(String lockrName, String password) async {
-    StorageUtil.deleteAll();
+    print('create($lockrName, $password)');
+    await StorageUtil.deleteAll();
     final appSupDir = await getApplicationSupportDirectory();
     File('${appSupDir.path}/Hello.txt').writeAsStringSync('Hello World!');
     final temporaryZipFile = File('${appSupDir.path}/temp.zip');
@@ -18,19 +19,25 @@ class LockrService {
     final encryptedTemporaryFile = File('${appSupDir.path}/temp.lkr');
     encryptedTemporaryFile.writeAsStringSync(encryptedZip);
     final result = await StorageUtil.saveFile(lockrName, encryptedTemporaryFile.path);
-    StorageUtil.deleteAll();
+    await StorageUtil.deleteAll();
     return result;
   }
 
 
   static Future<bool> loadFromStorage(String lockrPath, String password) async {
-    StorageUtil.deleteAll();
+    print('loadFromStorage($lockrPath, $password)');
+    await StorageUtil.deleteAll();
     final appSupDir = await getApplicationSupportDirectory();
     // 1. Decrypt *.lkr file.
-    Uint8List bytes = CryptoUtil.decrypt(password, File(lockrPath).readAsStringSync());
+    final result = CryptoUtil.decrypt(password, File(lockrPath).readAsStringSync());
+
+    if (!result.isSuccess) {
+      return false;
+    }
+
     // 2. Write bytes to a temporary *.zip file.
     final temporaryZipFile = File('${appSupDir.path}/temp.zip');
-    temporaryZipFile.writeAsBytesSync(bytes);
+    temporaryZipFile.writeAsBytesSync(result.value);
     // 3. Extract the temporary *.zip file.
     final archive = ZipDecoder().decodeBuffer(InputFileStream(temporaryZipFile.path));
     extractArchiveToDisk(archive, '${appSupDir.path}/');
@@ -40,6 +47,7 @@ class LockrService {
 
 
   static Future<bool> saveToStorage(String lockrName, String password) async {
+    print('saveToStorage($lockrName, $password)');
     final appSupDir = await getApplicationSupportDirectory();
     // 1. Create temporary ZIP project.
     final temporaryZipFile = File('${appSupDir.path}/temp.zip');
